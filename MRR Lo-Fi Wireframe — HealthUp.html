@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRR Lo-Fi Wireframe — HealthUp</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; color: #333; }
+
+  .header-bar { background: #00897B; color: #fff; padding: 16px 24px; text-align: center; position: sticky; top: 0; z-index: 100; }
+  .header-bar h1 { font-size: 20px; font-weight: 600; }
+  .header-bar p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+
+  .flow-nav { background: #fff; border-bottom: 1px solid #ddd; padding: 12px 24px; display: flex; gap: 8px; flex-wrap: wrap; position: sticky; top: 60px; z-index: 99; }
+  .flow-nav a { padding: 6px 14px; border-radius: 20px; font-size: 12px; text-decoration: none; color: #555; background: #f5f5f5; border: 1px solid #ddd; transition: all 0.2s; white-space: nowrap; }
+  .flow-nav a:hover, .flow-nav a.active { background: #00897B; color: #fff; border-color: #00897B; }
+
+  .section { max-width: 1400px; margin: 32px auto; padding: 0 24px; }
+  .section-title { font-size: 18px; font-weight: 700; color: #00897B; margin-bottom: 8px; }
+  .section-desc { font-size: 13px; color: #777; margin-bottom: 20px; line-height: 1.5; }
+
+  .screen-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: flex-start; margin-bottom: 40px; }
+
+  .screen-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; width: 320px; flex-shrink: 0; }
+  .screen-card.wide { width: 380px; }
+  .screen-label { background: #263238; color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .screen-label .badge { background: #00897B; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+  .screen-label .badge.p1 { background: #E65100; }
+  .screen-label .badge.noti { background: #1565C0; }
+
+  /* Phone frame */
+  .phone { background: #fafafa; border: 2px solid #e0e0e0; border-radius: 24px; margin: 16px; overflow: hidden; }
+  .phone-status { background: #333; color: #fff; font-size: 10px; padding: 4px 16px; display: flex; justify-content: space-between; }
+  .phone-header { background: #00897B; color: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+  .phone-header .back { font-size: 18px; cursor: pointer; }
+  .phone-body { padding: 0; min-height: 420px; background: #fff; }
+  .phone-tab { background: #f9f9f9; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 8px 0; }
+  .phone-tab span { font-size: 10px; color: #999; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .phone-tab span .icon { width: 20px; height: 20px; background: #ddd; border-radius: 4px; }
+  .phone-tab span.active { color: #00897B; font-weight: 600; }
+  .phone-tab span.active .icon { background: #00897B; }
+
+  /* Wireframe elements */
+  .wf-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.15s; }
+  .wf-menu-item:hover { background: #f5f5f5; }
+  .wf-menu-item .icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .wf-menu-item .text { flex: 1; }
+  .wf-menu-item .text .title { font-size: 14px; font-weight: 600; color: #333; }
+  .wf-menu-item .text .sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .wf-menu-item .arrow { color: #ccc; font-size: 16px; }
+  .highlight-item { border-left: 4px solid #00897B; background: #E0F2F1; }
+
+  .wf-section-header { padding: 10px 16px; background: #f5f5f5; font-size: 12px; font-weight: 600; color: #777; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Face verify */
+  .face-area { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; }
+  .face-circle { width: 180px; height: 180px; border-radius: 50%; border: 3px dashed #00897B; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; background: #f9fffe; }
+  .face-circle::after { content: ''; position: absolute; width: 190px; height: 190px; border-radius: 50%; border: 2px solid rgba(0,137,123,0.3); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.08); opacity: 0; } }
+  .face-icon { font-size: 60px; color: #00897B; }
+  .face-text { text-align: center; }
+  .face-text h3 { font-size: 16px; color: #333; margin-bottom: 8px; }
+  .face-text p { font-size: 12px; color: #999; line-height: 1.5; }
+
+  /* Buttons */
+  .wf-btn { display: block; margin: 16px; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; border: none; cursor: pointer; }
+  .wf-btn.primary { background: #00897B; color: #fff; }
+  .wf-btn.secondary { background: #fff; color: #00897B; border: 2px solid #00897B; }
+  .wf-btn.disabled { background: #e0e0e0; color: #999; }
+
+  /* SSO Loading */
+  .sso-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; }
+  .spinner { width: 48px; height: 48px; border: 4px solid #e0e0e0; border-top-color: #00897B; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* iframe area */
+  .iframe-zone { border: 2px dashed #1565C0; margin: 12px; border-radius: 8px; padding: 16px; background: #f8fbff; min-height: 300px; position: relative; }
+  .iframe-badge { position: absolute; top: -10px; left: 12px; background: #1565C0; color: #fff; font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: 600; }
+  .iframe-zone .wf-form-group { margin-bottom: 12px; }
+  .iframe-zone label { font-size: 11px; color: #555; font-weight: 600; display: block; margin-bottom: 4px; }
+  .iframe-zone .wf-input { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; background: #fff; color: #888; }
+  .iframe-zone select.wf-input { appearance: none; }
+
+  /* Status cards */
+  .status-card { margin: 8px 12px; padding: 14px; border-radius: 10px; border: 1px solid #eee; background: #fff; display: flex; gap: 12px; align-items: flex-start; }
+  .status-card .status-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .status-card .status-info { flex: 1; }
+  .status-card .status-info .req-id { font-size: 13px; font-weight: 600; color: #333; }
+  .status-card .status-info .req-detail { font-size: 11px; color: #999; margin-top: 2px; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-top: 4px; }
+  .badge-approved { background: #E8F5E9; color: #2E7D32; }
+  .badge-pending { background: #FFF3E0; color: #E65100; }
+  .badge-ready { background: #E3F2FD; color: #1565C0; }
+  .badge-rejected { background: #FFEBEE; color: #C62828; }
+
+  /* Notification */
+  .noti-banner { margin: 12px; border-radius: 12px; padding: 14px; background: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .noti-banner .noti-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .noti-banner .noti-header .app-icon { width: 24px; height: 24px; border-radius: 6px; background: #00897B; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; }
+  .noti-banner .noti-header .app-name { font-size: 12px; font-weight: 600; color: #555; }
+  .noti-banner .noti-header .noti-time { font-size: 10px; color: #bbb; margin-left: auto; }
+  .noti-banner .noti-title { font-size: 13px; font-weight: 600; color: #333; }
+  .noti-banner .noti-body { font-size: 12px; color: #777; margin-top: 4px; line-height: 1.4; }
+
+  /* Annotations */
+  .annotation { margin: 16px; padding: 12px; background: #FFFDE7; border-left: 4px solid #F9A825; border-radius: 0 8px 8px 0; font-size: 11px; line-height: 1.6; color: #555; }
+  .annotation strong { color: #F57F17; }
+  .annotation ul { margin: 6px 0 0 16px; }
+  .annotation li { margin-bottom: 3px; }
+
+  /* Flow arrow between screens */
+  .flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00897B; flex-shrink: 0; width: 40px; align-self: center; }
+  .flow-arrow.down { transform: rotate(90deg); }
+
+  /* Step indicator */
+  .step-dots { display: flex; gap: 6px; justify-content: center; padding: 12px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
+  .step-dot.active { background: #00897B; width: 24px; border-radius: 4px; }
+
+  /* QR payment */
+  .qr-placeholder { width: 140px; height: 140px; border: 2px solid #ccc; margin: 16px auto; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999; text-align: center; border-radius: 8px; background: #fafafa; }
+
+  /* Timeline */
+  .timeline { padding: 16px; }
+  .timeline-item { display: flex; gap: 12px; padding-bottom: 16px; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: 14px; top: 28px; bottom: 0; width: 2px; background: #e0e0e0; }
+  .timeline-item:last-child::before { display: none; }
+  .timeline-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; z-index: 1; }
+  .timeline-dot.done { background: #E8F5E9; color: #2E7D32; }
+  .timeline-dot.current { background: #E3F2FD; color: #1565C0; border: 2px solid #1565C0; }
+  .timeline-dot.pending { background: #f5f5f5; color: #bbb; }
+  .timeline-content .tl-title { font-size: 12px; font-weight: 600; color: #333; }
+  .timeline-content .tl-sub { font-size: 10px; color: #999; margin-top: 2px; }
+
+  /* Error/success state */
+  .state-box { margin: 12px; padding: 20px; border-radius: 12px; text-align: center; }
+  .state-box.success { background: #E8F5E9; }
+  .state-box.error { background: #FFEBEE; }
+  .state-box .state-icon { font-size: 40px; margin-bottom: 12px; }
+  .state-box h4 { font-size: 15px; color: #333; margin-bottom: 6px; }
+  .state-box p { font-size: 12px; color: #777; }
+
+  /* Upload area */
+  .upload-area { border: 2px dashed #ccc; border-radius: 8px; padding: 20px; text-align: center; margin: 8px 0; }
+  .upload-area .upload-icon { font-size: 24px; color: #bbb; }
+  .upload-area p { font-size: 11px; color: #999; margin-top: 6px; }
+
+  .divider { height: 1px; background: #eee; margin: 16px 0; }
+
+  /* Legend */
+  .legend { max-width: 1400px; margin: 0 auto 32px; padding: 0 24px; }
+  .legend-box { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; gap: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555; }
+  .legend-color { width: 20px; height: 20px; border-radius: 4px; }
+  .legend-dash { width: 20px; height: 20px; border: 2px dashed #1565C0; border-radius: 4px; }
+
+  @media (max-width: 768px) {
+    .screen-row { flex-direction: column; align-items: center; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <h1>Medical Request Record — Lo-Fi Wireframe</h1>
+  <p>HealthUp Application &nbsp;|&nbsp; Design Brief &nbsp;|&nbsp; March 2026</p>
+</div>
+
+<div class="flow-nav">
+  <a href="#flow1" class="active">1. Entry Point</a>
+  <a href="#flow2">2. Face Verify</a>
+  <a href="#flow3">3. SSO Loading</a>
+  <a href="#flow4">4. Request Form (iframe)</a>
+  <a href="#flow5">5. Payment (iframe)</a>
+  <a href="#flow6">6. Status Tracking (iframe)</a>
+  <a href="#flow7">7. Push Notification</a>
+  <a href="#flow8">8. Deep-Link Return</a>
+  <a href="#flow9">9. Request History (P1)</a>
+  <a href="#states">States & Errors</a>
+</div>
+
+<div class="legend">
+  <div class="legend-box">
+    <div class="legend-item"><div class="legend-color" style="background:#00897B"></div> HealthUp native UI</div>
+    <div class="legend-item"><div class="legend-dash"></div> inet portal (iframe / WebView)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#FFFDE7; border:1px solid #F9A825"></div> Design annotation</div>
+    <div class="legend-item"><div class="legend-color" style="background:#263238"></div> Screen label</div>
+    <div class="legend-item"><span style="font-size:12px;color:#00897B;font-weight:600">P0</span> = Must-have</div>
+    <div class="legend-item"><span style="font-size:12px;color:#E65100;font-weight:600">P1</span> = Nice-to-have</div>
+  </div>
+</div>
+
+<!-- ==================== FLOW 1: ENTRY POINT ==================== -->
+<div class="section" id="flow1">
+  <div class="section-title">Screen 1 — Entry Point</div>
+  <div class="section-desc">ผู้ใช้เข้าถึงฟีเจอร์ Medical Request Record ผ่านเมนูบริการใน HealthUp app</div>
+  <div class="screen-row">
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Services Menu — Entry Point</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>100%</span></div>
+        <div class="phone-header"><span>บริการ</span></div>
+        <div class="phone-body">
+          <div class="wf-section-header">บริการยอดนิยม</div>
+          <div class="wf-menu-item">
+            <div class="icon-box" style="background:#E3F2FD">📅</div>
+            <div class="text"><div class="title">นัดหมายแพทย์</div><div class="sub">จองคิวพบแพทย์ออนไลน์</div></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="wf-menu-item">
+            <div class="icon-box" style="background:#FFF3E0">🎫</div>
+            <div class="text"><div class="title">My Voucher</div><div class="sub">ตรวจสอบ Voucher ของคุณ</div></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="wf-menu-item highlight-item">
+            <div class="icon-box" style="background:#E0F2F1">📋</div>
+            <div class="text"><div class="title">ขอเอกสารทางการแพทย์</div><div class="sub">ขอสำเนาประวัติ / ใบรับรองแพทย์</div></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="wf-menu-item">
+            <div class="icon-box" style="background:#F3E5F5">💊</div>
+            <div class="text"><div class="title">สั่งยาซ้ำ</div><div class="sub">เติมยาตามใบสั่งแพทย์</div></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="wf-menu-item">
+            <div class="icon-box" style="background:#FFEBEE">🏥</div>
+            <div class="text"><div class="title">ผลตรวจ</div><div class="sub">ดูผลแลปและรายงาน</div></div>
+            <div class="arrow">›</div>
+          </div>
+        </div>
+        <div class="phone-tab">
+          <span><div class="icon"></div>หน้าหลัก</span>
+          <span class="active"><div class="icon"></div>บริการ</span>
+          <span><div class="icon"></div>กิจกรรม</span>
+          <span><div class="icon"></div>โปรไฟล์</span>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Design Notes:</strong>
+        <ul>
+          <li>Entry point อยู่ในหมวด "บริการ"</li>
+          <li>ใช้ icon 📋 + ชื่อ "ขอเอกสารทางการแพทย์"</li>
+          <li>Subtitle อธิบายสั้นๆ ว่าทำอะไรได้</li>
+          <li>กดแล้วไปหน้า Face Verification ทันที</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FLOW 2: FACE VERIFICATION ==================== -->
+<div class="section" id="flow2">
+  <div class="section-title">Screen 2 — Face Verification (Liveness Check)</div>
+  <div class="section-desc">สแกนใบหน้ายืนยันตัวตน ระดับเดียวกับธนาคาร ก่อนเข้าสู่ระบบขอเอกสาร</div>
+  <div class="screen-row">
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Face Verify — Instruction</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ยืนยันตัวตน</div>
+        <div class="phone-body">
+          <div class="face-area">
+            <div class="face-circle">
+              <div class="face-icon">🧑</div>
+            </div>
+            <div class="face-text">
+              <h3>สแกนใบหน้าเพื่อยืนยันตัวตน</h3>
+              <p>เพื่อความปลอดภัยของข้อมูลทางการแพทย์<br>กรุณาสแกนใบหน้าของคุณ</p>
+            </div>
+          </div>
+          <div class="step-dots">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+          </div>
+          <div class="annotation">
+            <strong>Notes:</strong>
+            <ul>
+              <li>แสดงคำอธิบายสั้นๆ ว่าทำไมต้อง verify</li>
+              <li>เน้นว่าเป็นเรื่อง "ความปลอดภัย"</li>
+              <li>Step indicator: 1.Verify → 2.SSO → 3.Request</li>
+            </ul>
+          </div>
+          <button class="wf-btn primary">เริ่มสแกนใบหน้า</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Face Verify — Scanning</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> กำลังสแกน...</div>
+        <div class="phone-body">
+          <div style="background:#000; height:350px; display:flex; align-items:center; justify-content:center; flex-direction:column; position:relative;">
+            <div style="width:200px; height:260px; border:3px solid #00897B; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:80px; opacity:0.3;">🧑</span>
+            </div>
+            <p style="color:#fff; font-size:12px; margin-top:16px; text-align:center;">หันหน้าตรง ให้ใบหน้าอยู่ในกรอบ</p>
+            <div style="position:absolute; bottom:12px; left:50%; transform:translateX(-50%); background:rgba(0,137,123,0.9); color:#fff; padding:6px 16px; border-radius:20px; font-size:11px;">กำลังตรวจสอบ...</div>
+          </div>
+          <div class="annotation">
+            <strong>Camera UX:</strong>
+            <ul>
+              <li>Camera feed เต็มจอ + กรอบวงรีวางหน้า</li>
+              <li>Instruction text เปลี่ยนตาม state</li>
+              <li>"หันหน้าตรง" → "กะพริบตา" → "หันซ้าย"</li>
+              <li>Vendor SDK จัดการ liveness detection</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Face Verify — Success</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:42</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ยืนยันตัวตน</div>
+        <div class="phone-body">
+          <div style="padding-top:40px;">
+            <div class="state-box success">
+              <div class="state-icon">✅</div>
+              <h4>ยืนยันตัวตนสำเร็จ</h4>
+              <p>ระบบกำลังเชื่อมต่อเพื่อเข้าสู่ระบบขอเอกสาร...</p>
+            </div>
+          </div>
+          <div class="step-dots">
+            <div class="step-dot" style="background:#00897B;width:8px;"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+          </div>
+          <div class="annotation">
+            <strong>Notes:</strong>
+            <ul>
+              <li>แสดง success state 1-2 วินาที</li>
+              <li>Auto-redirect ไป SSO loading</li>
+              <li>ไม่ต้องกดปุ่มเพิ่ม</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== FLOW 3: SSO LOADING ==================== -->
+<div class="section" id="flow3">
+  <div class="section-title">Screen 3 — SSO Handoff (Loading)</div>
+  <div class="section-desc">ระบบ generate SSO token และส่งไปที่ inet portal โดยอัตโนมัติ ผู้ใช้ไม่ต้องทำอะไร</div>
+  <div class="screen-row">
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> SSO Loading State</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:42</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="sso-loading">
+            <div class="spinner"></div>
+            <h4 style="font-size:15px; margin-bottom:8px;">กำลังเข้าสู่ระบบ...</h4>
+            <p style="font-size:12px; color:#999; text-align:center;">กำลังเชื่อมต่อกับระบบขอเอกสาร<br>กรุณารอสักครู่</p>
+          </div>
+          <div class="step-dots">
+            <div class="step-dot" style="background:#00897B;width:8px;"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+          </div>
+          <div class="annotation">
+            <strong>Technical:</strong>
+            <ul>
+              <li>เรียก POST /mrr/initiate ส่ง face_verification_id</li>
+              <li>ได้ SSO token + portal URL กลับมา</li>
+              <li>Load WebView ด้วย URL ที่แนบ token</li>
+              <li>Loading ไม่เกิน 3 วินาที (target)</li>
+              <li>ถ้า timeout → แสดง error + ปุ่ม "ลองใหม่"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FLOW 4: REQUEST FORM (iframe) ==================== -->
+<div class="section" id="flow4">
+  <div class="section-title">Screen 4 — Document Request Form (inet iframe)</div>
+  <div class="section-desc">UI ทั้งหมดภายใน iframe เป็นของ inet — HealthUp คง header + navigation bar ไว้</div>
+  <div class="screen-row">
+
+    <div class="screen-card wide">
+      <div class="screen-label"><span class="badge">P0</span> Request Form — Inside iframe</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:42</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="iframe-zone">
+            <div class="iframe-badge">inet WebView</div>
+
+            <div style="padding:8px 0 12px; font-size:14px; font-weight:600; color:#333;">ขอสำเนาเวชระเบียน</div>
+
+            <div class="wf-form-group">
+              <label>ประเภทเอกสาร *</label>
+              <div class="wf-input">สำเนาประวัติการรักษา ▾</div>
+            </div>
+            <div class="wf-form-group">
+              <label>ผู้ขอ *</label>
+              <div class="wf-input" style="background:#f0faf9;">เจ้าของประวัติ (ตนเอง) — ถูกเลือกอัตโนมัติจาก SSO</div>
+            </div>
+            <div class="wf-form-group">
+              <label>ช่วงวันที่ต้องการ</label>
+              <div style="display:flex;gap:8px;">
+                <div class="wf-input" style="flex:1;">01/01/2025</div>
+                <div class="wf-input" style="flex:1;">08/03/2026</div>
+              </div>
+            </div>
+            <div class="wf-form-group">
+              <label>แนบเอกสาร (สำเนาบัตรประชาชน) *</label>
+              <div class="upload-area">
+                <div class="upload-icon">📎</div>
+                <p>แตะเพื่ออัปโหลด หรือถ่ายรูป</p>
+              </div>
+            </div>
+            <div class="wf-form-group">
+              <label>ช่องทางรับเอกสาร *</label>
+              <div class="wf-input">เลือกช่องทาง ▾</div>
+            </div>
+          </div>
+
+          <div class="annotation">
+            <strong>Design Decisions:</strong>
+            <ul>
+              <li>HealthUp header (‹ + title) ยังคงอยู่ด้านบน</li>
+              <li>เนื้อหาทั้งหมดด้านล่าง = inet iframe</li>
+              <li>"ผู้ขอ" ถูก pre-fill จาก SSO (ไม่ต้องกรอก)</li>
+              <li>File upload ต้องเปิด camera/gallery ได้ใน WebView</li>
+              <li>Scroll ภายใน iframe ต้อง smooth</li>
+              <li>ปุ่ม submit อยู่ด้านล่างสุดของ iframe</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Delivery Method Selection</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:43</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="iframe-zone">
+            <div class="iframe-badge">inet WebView</div>
+            <div style="padding:8px 0 12px; font-size:14px; font-weight:600; color:#333;">เลือกช่องทางรับเอกสาร</div>
+
+            <div class="wf-menu-item" style="border:2px solid #00897B; border-radius:8px; margin-bottom:8px;">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #00897B;display:flex;align-items:center;justify-content:center;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#00897B;"></div>
+              </div>
+              <div class="text"><div class="title">รับด้วยตนเอง</div><div class="sub">มารับที่เคาน์เตอร์เวชระเบียน</div></div>
+            </div>
+            <div class="wf-menu-item" style="border:1px solid #eee; border-radius:8px; margin-bottom:8px;">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;"></div>
+              <div class="text"><div class="title">มอบอำนาจรับแทน</div><div class="sub">ผู้รับมอบอำนาจมารับที่ รพ.</div></div>
+            </div>
+            <div class="wf-menu-item" style="border:1px solid #eee; border-radius:8px; margin-bottom:8px;">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;"></div>
+              <div class="text"><div class="title">ส่งทาง E-mail</div><div class="sub">ได้รับภายใน 14 วันทำการ</div></div>
+            </div>
+            <div class="wf-menu-item" style="border:1px solid #eee; border-radius:8px;">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;"></div>
+              <div class="text"><div class="title">ส่งทางไปรษณีย์</div><div class="sub">EMS — ได้รับภายใน 7 วันทำการ</div></div>
+            </div>
+          </div>
+          <div class="annotation">
+            <strong>ตรงกับ slide ที่ให้มา:</strong>
+            <ul>
+              <li>รับด้วยตนเอง</li>
+              <li>มอบอำนาจรับแทน</li>
+              <li>Mail (อายุ 14 วัน)</li>
+              <li>ไปรษณีย์</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== FLOW 5: PAYMENT ==================== -->
+<div class="section" id="flow5">
+  <div class="section-title">Screen 5 — Payment (inet iframe)</div>
+  <div class="section-desc">การชำระเงินผ่าน QR Code อยู่ภายใน iframe ของ inet</div>
+  <div class="screen-row">
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> QR Payment — iframe</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:44</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="iframe-zone">
+            <div class="iframe-badge">inet WebView</div>
+            <div style="text-align:center; padding-top:12px;">
+              <div style="font-size:14px; font-weight:600; color:#333; margin-bottom:4px;">ชำระเงิน</div>
+              <div style="font-size:11px; color:#999;">คำร้อง REQ-2026-00123</div>
+            </div>
+            <div class="divider"></div>
+            <div style="text-align:center;">
+              <div style="font-size:11px; color:#777;">ยอดชำระ</div>
+              <div style="font-size:28px; font-weight:700; color:#00897B;">฿ 200.00</div>
+            </div>
+            <div class="qr-placeholder">
+              <div>
+                <div style="font-size:20px;">◻️◼️◻️◼️<br>◼️◻️◼️◻️<br>◻️◼️◻️◼️<br>◼️◻️◼️◻️</div>
+                <div style="margin-top:4px;">QR PromptPay</div>
+              </div>
+            </div>
+            <div style="text-align:center; font-size:11px; color:#999; padding:0 20px;">สแกน QR Code ด้วยแอปธนาคาร<br>หรือแอป e-Wallet ของคุณ</div>
+          </div>
+          <div class="annotation">
+            <strong>Notes:</strong>
+            <ul>
+              <li>QR code render ใน iframe — HealthUp ไม่ต้อง handle payment</li>
+              <li>ต้อง test ว่า QR แสดงผลชัดใน WebView</li>
+              <li>หลังจ่ายเสร็จ inet update status → webhook → notification</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Payment Success</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:45</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="iframe-zone">
+            <div class="iframe-badge">inet WebView</div>
+            <div style="padding-top:20px;">
+              <div class="state-box success">
+                <div class="state-icon">🎉</div>
+                <h4>ชำระเงินสำเร็จ</h4>
+                <p>คำร้องของคุณอยู่ระหว่างดำเนินการ<br>จะแจ้งเตือนเมื่อเอกสารพร้อม</p>
+              </div>
+            </div>
+            <div style="text-align:center; padding:16px; font-size:11px; color:#777;">หมายเลขคำร้อง: <strong>REQ-2026-00123</strong></div>
+          </div>
+          <button class="wf-btn primary">ดูสถานะคำร้อง</button>
+          <button class="wf-btn secondary">กลับหน้าหลัก</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== FLOW 6: STATUS TRACKING ==================== -->
+<div class="section" id="flow6">
+  <div class="section-title">Screen 6 — Status Tracking (inet iframe)</div>
+  <div class="section-desc">ผู้ใช้ติดตามสถานะคำร้อง — UI เป็นของ inet ภายใน WebView</div>
+  <div class="screen-row">
+    <div class="screen-card wide">
+      <div class="screen-label"><span class="badge">P0</span> Request Status — Timeline</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:46</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> สถานะคำร้อง</div>
+        <div class="phone-body">
+          <div class="iframe-zone">
+            <div class="iframe-badge">inet WebView</div>
+
+            <div style="padding:8px 0; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:13px; font-weight:600; color:#333;">REQ-2026-00123</div>
+                <div style="font-size:11px; color:#999;">สำเนาประวัติการรักษา</div>
+              </div>
+              <div class="status-badge badge-approved">อนุมัติแล้ว</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-dot done">✓</div>
+                <div class="timeline-content">
+                  <div class="tl-title">ยื่นคำร้อง</div>
+                  <div class="tl-sub">8 มี.ค. 2026 — 09:42</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot done">✓</div>
+                <div class="timeline-content">
+                  <div class="tl-title">ตรวจสอบคำร้อง — อนุมัติ</div>
+                  <div class="tl-sub">8 มี.ค. 2026 — 14:30 • นพ.สมชาย</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot done">✓</div>
+                <div class="timeline-content">
+                  <div class="tl-title">ชำระเงิน — ฿200</div>
+                  <div class="tl-sub">8 มี.ค. 2026 — 15:10</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot current">⟳</div>
+                <div class="timeline-content">
+                  <div class="tl-title" style="color:#1565C0;">กำลังดำเนินการ</div>
+                  <div class="tl-sub">อยู่ระหว่างจัดทำเอกสาร</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot pending">5</div>
+                <div class="timeline-content">
+                  <div class="tl-title" style="color:#bbb;">เอกสารพร้อม</div>
+                  <div class="tl-sub" style="color:#ccc;">รอดำเนินการ</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot pending">6</div>
+                <div class="timeline-content">
+                  <div class="tl-title" style="color:#bbb;">เสร็จสมบูรณ์</div>
+                  <div class="tl-sub" style="color:#ccc;">รอดำเนินการ</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Timeline States:</strong>
+        <ul>
+          <li>✓ Done (green) — ขั้นตอนที่ผ่านแล้ว</li>
+          <li>⟳ Current (blue) — ขั้นตอนปัจจุบัน</li>
+          <li>○ Pending (gray) — ยังไม่ถึง</li>
+          <li>Timeline UI เป็นของ inet — แสดงใน iframe</li>
+          <li>เมื่อสถานะเปลี่ยน → inet ส่ง webhook → HU push notification</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FLOW 7: PUSH NOTIFICATION ==================== -->
+<div class="section" id="flow7">
+  <div class="section-title">Screen 7 — Push Notification</div>
+  <div class="section-desc">เมื่อสถานะคำร้องเปลี่ยน HealthUp จะส่ง push notification ถึงผู้ใช้</div>
+  <div class="screen-row">
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge noti">Notification</span> Approved</div>
+      <div class="phone">
+        <div class="phone-status"><span>14:31</span><span>85%</span></div>
+        <div style="padding:20px 12px; background:#f5f5f5; min-height:420px;">
+          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:16px;">วันเสาร์ 8 มีนาคม</div>
+          <div class="noti-banner">
+            <div class="noti-header">
+              <div class="app-icon">H</div>
+              <div class="app-name">HealthUp</div>
+              <div class="noti-time">เมื่อกี้</div>
+            </div>
+            <div class="noti-title">คำร้องได้รับอนุมัติ ✅</div>
+            <div class="noti-body">คำร้อง #REQ-2026-00123 ได้รับอนุมัติแล้ว กรุณาชำระเงินเพื่อดำเนินการ</div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div class="noti-banner" style="opacity:0.6;">
+              <div class="noti-header">
+                <div class="app-icon">H</div>
+                <div class="app-name">HealthUp</div>
+                <div class="noti-time">2 ชม.</div>
+              </div>
+              <div class="noti-title">นัดหมายของคุณพรุ่งนี้</div>
+              <div class="noti-body">อย่าลืมนัดพบ นพ.สุชาติ เวลา 10:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Notification Variants:</strong>
+        <ul>
+          <li>✅ อนุมัติ → "กรุณาชำระเงิน"</li>
+          <li>❌ ปฏิเสธ → "ตรวจสอบรายละเอียด"</li>
+          <li>📦 เอกสารพร้อม → "รับเอกสารตามช่องทาง"</li>
+          <li>✔️ เสร็จสมบูรณ์ → "ขอบคุณที่ใช้บริการ"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge noti">Notification</span> Document Ready</div>
+      <div class="phone">
+        <div class="phone-status"><span>10:15</span><span>92%</span></div>
+        <div style="padding:20px 12px; background:#f5f5f5; min-height:420px;">
+          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:16px;">วันจันทร์ 10 มีนาคม</div>
+          <div class="noti-banner" style="border-left:4px solid #1565C0;">
+            <div class="noti-header">
+              <div class="app-icon">H</div>
+              <div class="app-name">HealthUp</div>
+              <div class="noti-time">เมื่อกี้</div>
+            </div>
+            <div class="noti-title">📦 เอกสารพร้อมรับ</div>
+            <div class="noti-body">เอกสารของคุณจัดทำเสร็จแล้ว กรุณารับเอกสารตามช่องทางที่เลือก (รับด้วยตนเอง)</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Tap Action:</strong>
+        <ul>
+          <li>กดที่ notification → เปิด app</li>
+          <li>Deep-link ไป /mrr/status/REQ-xxx</li>
+          <li>ถ้า session ยังไม่หมดอายุ → SSO refresh → เปิด iframe ทันที</li>
+          <li>ถ้า session หมดอายุ → face verify ใหม่</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== FLOW 8: DEEP-LINK RETURN ==================== -->
+<div class="section" id="flow8">
+  <div class="section-title">Screen 8 — Deep-Link Return (from Notification)</div>
+  <div class="section-desc">เมื่อผู้ใช้กด notification → app จะพาไปยังหน้า status ใน iframe ทันที (ถ้า session ยังอยู่)</div>
+  <div class="screen-row">
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge">P0</span> Deep-Link — Session Valid</div>
+      <div class="phone">
+        <div class="phone-status"><span>10:15</span><span>92%</span></div>
+        <div class="phone-header"><span class="back">‹</span> สถานะคำร้อง</div>
+        <div class="phone-body">
+          <div class="sso-loading" style="min-height:200px;">
+            <div class="spinner"></div>
+            <p style="font-size:12px; color:#999;">กำลังโหลดสถานะคำร้อง...</p>
+          </div>
+          <div style="text-align:center; padding:0 20px;">
+            <div style="font-size:11px; color:#bbb; margin-bottom:4px;">↓ แล้วจะแสดง ↓</div>
+          </div>
+          <div class="iframe-zone" style="min-height:160px; margin-top:12px;">
+            <div class="iframe-badge">inet WebView</div>
+            <div style="text-align:center; padding:30px 0; color:#999; font-size:12px;">
+              Status page ของ REQ-2026-00123<br>โหลดจาก inet โดยตรง
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Flow:</strong>
+        <ul>
+          <li>1. กด notification</li>
+          <li>2. App เปิด + เช็ค mrr_session</li>
+          <li>3. Session ยังอยู่ → POST /mrr/sso-refresh</li>
+          <li>4. ได้ token ใหม่ → load WebView + deep_link_path</li>
+          <li>5. ไม่ต้อง face verify ซ้ำ!</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge" style="background:#E65100">Expired</span> Deep-Link — Session Expired</div>
+      <div class="phone">
+        <div class="phone-status"><span>10:15</span><span>92%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div style="padding-top:40px;">
+            <div class="state-box" style="background:#FFF3E0;">
+              <div class="state-icon">🔒</div>
+              <h4>เซสชันหมดอายุ</h4>
+              <p>กรุณายืนยันตัวตนอีกครั้ง<br>เพื่อดูสถานะคำร้องของคุณ</p>
+            </div>
+          </div>
+          <button class="wf-btn primary">ยืนยันตัวตน</button>
+          <button class="wf-btn secondary">กลับหน้าหลัก</button>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>Session expired (>24h):</strong>
+        <ul>
+          <li>แสดงหน้า "เซสชันหมดอายุ"</li>
+          <li>กดปุ่ม → ไป face verify → SSO → deep-link ต่อ</li>
+          <li>ระบบจำ deep_link_path ไว้ → หลัง verify กลับมาที่เดิม</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== FLOW 9: REQUEST HISTORY (P1) ==================== -->
+<div class="section" id="flow9">
+  <div class="section-title">Screen 9 — Request History Dashboard (P1)</div>
+  <div class="section-desc">Native HealthUp screen แสดงรายการคำร้องทั้งหมด — ไม่ต้อง load iframe เพื่อดูสรุป</div>
+  <div class="screen-row">
+    <div class="screen-card wide">
+      <div class="screen-label"><span class="badge p1">P1</span> Request History — Native</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:41</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> คำร้องของฉัน</div>
+        <div class="phone-body">
+          <div style="padding:8px 12px; display:flex; gap:6px;">
+            <div style="padding:4px 12px; background:#00897B; color:#fff; border-radius:16px; font-size:11px; font-weight:600;">ทั้งหมด (3)</div>
+            <div style="padding:4px 12px; background:#f5f5f5; color:#777; border-radius:16px; font-size:11px;">กำลังดำเนินการ</div>
+            <div style="padding:4px 12px; background:#f5f5f5; color:#777; border-radius:16px; font-size:11px;">เสร็จแล้ว</div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-icon" style="background:#E3F2FD; color:#1565C0;">⟳</div>
+            <div class="status-info">
+              <div class="req-id">REQ-2026-00123</div>
+              <div class="req-detail">สำเนาประวัติการรักษา • 8 มี.ค. 2026</div>
+              <div class="status-badge badge-approved">กำลังดำเนินการ</div>
+            </div>
+            <div style="color:#ccc; font-size:16px;">›</div>
+          </div>
+          <div class="status-card">
+            <div class="status-icon" style="background:#E8F5E9; color:#2E7D32;">✓</div>
+            <div class="status-info">
+              <div class="req-id">REQ-2026-00098</div>
+              <div class="req-detail">ใบรับรองแพทย์ • 20 ก.พ. 2026</div>
+              <div class="status-badge badge-ready">เสร็จสมบูรณ์</div>
+            </div>
+            <div style="color:#ccc; font-size:16px;">›</div>
+          </div>
+          <div class="status-card">
+            <div class="status-icon" style="background:#FFEBEE; color:#C62828;">✕</div>
+            <div class="status-info">
+              <div class="req-id">REQ-2026-00085</div>
+              <div class="req-detail">สำเนาผลแลป • 10 ก.พ. 2026</div>
+              <div class="status-badge badge-rejected">ถูกปฏิเสธ</div>
+            </div>
+            <div style="color:#ccc; font-size:16px;">›</div>
+          </div>
+
+          <button class="wf-btn primary">+ ยื่นคำร้องใหม่</button>
+        </div>
+      </div>
+      <div class="annotation">
+        <strong>P1 Feature:</strong>
+        <ul>
+          <li>เป็นหน้า native HealthUp (ไม่ใช่ iframe)</li>
+          <li>ดึงข้อมูลจาก GET /mrr/requests (synced from webhooks)</li>
+          <li>Filter tabs: ทั้งหมด / กำลังดำเนินการ / เสร็จแล้ว</li>
+          <li>กดที่ card → face verify (ถ้า session expired) → เปิด iframe ไปหน้า status</li>
+          <li>ปุ่ม "ยื่นคำร้องใหม่" → เริ่ม flow ใหม่ตั้งแต่ face verify</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== STATES & ERRORS ==================== -->
+<div class="section" id="states">
+  <div class="section-title">Error States & Edge Cases</div>
+  <div class="section-desc">สถานะที่ต้อง design สำหรับ error cases ต่างๆ</div>
+  <div class="screen-row">
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge" style="background:#C62828">Error</span> Face Verify Failed</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:42</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ยืนยันตัวตน</div>
+        <div class="phone-body">
+          <div style="padding-top:40px;">
+            <div class="state-box error">
+              <div class="state-icon">❌</div>
+              <h4>ยืนยันตัวตนไม่สำเร็จ</h4>
+              <p>ไม่สามารถยืนยันตัวตนได้<br>กรุณาลองใหม่อีกครั้ง หรือติดต่อ รพ.</p>
+            </div>
+          </div>
+          <button class="wf-btn primary">ลองใหม่</button>
+          <button class="wf-btn secondary">ติดต่อ รพ.</button>
+          <div class="annotation">
+            <strong>Error Cases:</strong>
+            <ul>
+              <li>Liveness detection fail → ลองใหม่</li>
+              <li>Face ไม่ตรงกับ record → ติดต่อ รพ.</li>
+              <li>แสงไม่พอ / กล้องมีปัญหา → Tips</li>
+              <li>Max retry = 3 ครั้ง → lock 30 นาที</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge" style="background:#C62828">Error</span> SSO / Network Error</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:42</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div style="padding-top:40px;">
+            <div class="state-box error">
+              <div class="state-icon">🔌</div>
+              <h4>ไม่สามารถเชื่อมต่อได้</h4>
+              <p>ระบบขอเอกสารไม่ตอบสนอง<br>กรุณาลองใหม่ในอีกสักครู่</p>
+            </div>
+          </div>
+          <button class="wf-btn primary">ลองใหม่</button>
+          <button class="wf-btn secondary">กลับหน้าหลัก</button>
+          <div class="annotation">
+            <strong>Error Cases:</strong>
+            <ul>
+              <li>SSO token generation fail</li>
+              <li>inet portal ไม่ respond</li>
+              <li>Network timeout > 10 sec</li>
+              <li>inet returns 401 (token invalid)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-card">
+      <div class="screen-label"><span class="badge" style="background:#C62828">Error</span> iframe Load Error</div>
+      <div class="phone">
+        <div class="phone-status"><span>9:43</span><span>100%</span></div>
+        <div class="phone-header"><span class="back">‹</span> ขอเอกสารทางการแพทย์</div>
+        <div class="phone-body">
+          <div class="iframe-zone" style="display:flex; align-items:center; justify-content:center; flex-direction:column; min-height:280px;">
+            <div class="iframe-badge">inet WebView</div>
+            <div style="font-size:40px; color:#ccc; margin-bottom:12px;">⚠️</div>
+            <div style="font-size:13px; color:#777; text-align:center;">ไม่สามารถโหลดหน้าเว็บได้</div>
+            <div style="font-size:11px; color:#bbb; margin-top:4px; text-align:center;">กรุณาตรวจสอบอินเทอร์เน็ต</div>
+          </div>
+          <button class="wf-btn primary">โหลดใหม่</button>
+          <div class="annotation">
+            <strong>Notes:</strong>
+            <ul>
+              <li>WebView onError → แสดง error ใน iframe zone</li>
+              <li>ปุ่ม "โหลดใหม่" → reload WebView</li>
+              <li>ถ้า fail 3 ครั้ง → แนะนำติดต่อ รพ.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="background:#263238; color:#fff; padding:24px; text-align:center; margin-top:40px;">
+  <div style="font-size:14px; font-weight:600;">Medical Request Record — Lo-Fi Wireframe</div>
+  <div style="font-size:12px; opacity:0.7; margin-top:4px;">HealthUp Application &nbsp;•&nbsp; Design Brief &nbsp;•&nbsp; v1.0 &nbsp;•&nbsp; March 2026</div>
+  <div style="font-size:11px; opacity:0.5; margin-top:8px;">Screens: 14 &nbsp;|&nbsp; States: Entry → Verify → SSO → Form → Payment → Status → Notification → Deep-link &nbsp;|&nbsp; Errors: 3</div>
+</div>
+
+<script>
+// Smooth scroll for nav
+document.querySelectorAll('.flow-nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.flow-nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+// Update active nav on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.flow-nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html>
